@@ -52,25 +52,6 @@ docker run -p 8080:8080 \
 {
   "message": "your message here"
 }
-```Router-hosted LLM.
- 
-## Tech stack
- 
-| Layer | Technology |
-|---|---|
-| Runtime | Node.js |
-| Language | JavaScript / TypeScript |
-| AI framework | LangChain |
-| Agent system | `createAgent()` — ReAct-based agent |
-| Model provider | OpenRouter (OpenAI-compatible API) |
-| LLM wrapper | `@langchain/openai` |
-| Schema validation | Zod |
-| Tools system | LangChain `tool()` API |
- 
-### Installation
- 
-```bash
-npm install
 ```
  
 ### Configuration
