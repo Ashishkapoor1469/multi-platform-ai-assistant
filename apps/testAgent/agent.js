@@ -12,31 +12,37 @@ const llm = new ChatOpenAI({
       "X-Title": "Test-Agent",
     },
   },
-  model: "nvidia/nemotron-3-super-120b-a12b:free",  
+  model: "nvidia/nemotron-3-super-120b-a12b:free",
   temperature: 0,
 });
 
-const agent = createReactAgent({               
-  llm,                                         
+const agent = createReactAgent({
+  llm,
   tools: [getWeather, addition],
 });
 
-export async function ChatAgent(message) {
+export async function ChatAgent(message, onToken) {
   console.log(message);
   try {
-    const res = await agent.invoke({
-      messages: [
-        {
-          role: "user",
-          content: message,
-        },
-      ],
-    });
+    const stream = await agent.stream(
+         { messages: [{ role: "user", content: message }] },
+         {streamMode: "messages"}
+    );
 
-    console.log(res.messages.at(-1).content)
-    return res.messages.at(-1).content;
+    let fullResponse = "";
+
+    for await (const [chunk, metadata] of stream) {
+      if (chunk.content && metadata.langgraph_node === "agent") {
+        fullResponse += chunk.content;
+       console.log(fullResponse)
+        onToken?.(chunk.content);
+      }
+    }
+
+    console.log(fullResponse);
+    return fullResponse;
   } catch (err) {
     console.error("error", err);
-    return "agent failed to generate response"; 
+    return "agent failed to generate response";
   }
 }

@@ -8,7 +8,7 @@ POST {{baseUrl}}/chat
 Content-Type: application/json
 
 {
-  "message": "what is the result of 30 added to 90"
+  "message": "write a paragraph about gorkha"
 }
 
 ### Test empty message (should return 400)

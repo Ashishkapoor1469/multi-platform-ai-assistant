@@ -8,7 +8,9 @@ if (!process.env.OPENROUTER_API_KEY) {
   process.exit(1);
 }
 
-console.log(`🤖 Using model: ${process.env.MODEL || "mistralai/mistral-7b-instruct:free"}`);
+console.log(
+  `🤖 Using model: ${process.env.MODEL || "mistralai/mistral-7b-instruct:free"}`,
+);
 
 const app = express();
 
@@ -22,31 +24,26 @@ app.get("/agent/status", (req, res) => {
 app.post("/agent/chat", async (req, res) => {
   const { message } = req.body;
 
-  try {
-    if (!message || message === "") {
-      return res.status(400).json({     
-        message: "message is required",
-      });
-    }
-
-    console.log(message);
-
-    const result = await ChatAgent(message);
-
-    if (!result) {
-      return res.status(500).json({
-        message: "no response from agent",
-      });
-    }
-
-    return res.status(200).json({ message: result });  
-
-  } catch (err) {
-    return res.status(500).json({
-      message: "internal server error",
-      error: err.message,
-    });
+  if (!message || message === "") {
+    return res.status(400).json({ message: "message is required" });
   }
+
+  console.log(message);
+
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+
+  try {
+    await ChatAgent(message, (token) => {
+      res.write(`data: ${JSON.stringify({ token })}\n\n`);
+    });
+  } catch (err) {
+    res.write(`data: ${JSON.stringify({ error: "internal server error" })}\n\n`);
+  }
+
+  res.write("data: [DONE]\n\n");
+  res.end(); 
 });
 
 const PORT = 8080;
