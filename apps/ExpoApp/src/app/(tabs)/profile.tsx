@@ -17,25 +17,25 @@ export default function Profile() {
         <ProfileMenuItem
           icon="person-outline"
           title="Edit Profile"
-          onPress={() => {}}
+          onPress={() => {router.push("/editprofile")}}
         />
 
         <ProfileMenuItem
           icon="settings-outline"
           title="Settings"
-          onPress={() => {}}
+          onPress={() => {router.push("/settings")}}
         />
 
         <ProfileMenuItem
           icon="notifications-outline"
           title="Notifications"
-          onPress={() => {}}
+          onPress={() => {router.push("/nortification")}}
         />
 
         <ProfileMenuItem
           icon="help-circle-outline"
           title="Help & Support"
-          onPress={() => {}}
+          onPress={() => {router.push("/helpsupport")}}
         />
 
         <LogoutButton onPress={() => router.replace("/login")} />

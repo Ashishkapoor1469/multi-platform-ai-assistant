@@ -5,7 +5,6 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  ActivityIndicator,
 } from "react-native";
 import Header from "@/components/home/header";
 import InputBar from "@/components/home/inputbar";
@@ -119,7 +118,7 @@ export default function Home() {
     setLoadingAI(true);
 
     try {
-      const res = await fetch("http://192.168.31.45:8080/api/chat", {
+      const res = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: text, mode: "conversation" }),

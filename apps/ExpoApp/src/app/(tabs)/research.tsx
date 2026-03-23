@@ -1,6 +1,7 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, StyleSheet } from "react-native";
 import { useState } from "react";
+
 import SearchBar from "@/components/research/searchbar";
 import LoadingState from "@/components/research/loadingstate";
 import EmptyState from "@/components/research/emptystate";
@@ -11,30 +12,72 @@ export default function Research() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState([]);
 
-  // 🔥 Fake AI (replace with API later)
   const handleSearch = async () => {
-    if (!query) return;
+    if (!query.trim()) return;
 
     setLoading(true);
     setResults([]);
 
-    setTimeout(() => {
+    try {
+      const res = await fetch(
+        `${process.env.EXPO_PUBLIC_API_URL}/api/research`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ message: query }),
+        }
+      );
+      console.log("API URL:", process.env.EXPO_PUBLIC_API_URL);
+ console.log(res);
+ 
+      const data = await res.json();
+  console.log(data);
+  
+      const blocks = data.data?.blocks || [];
+
+      const formattedResults = blocks.map((block, index) => {
+        if (block.type === "summary") {
+          return {
+            title: "📊 Summary",
+            content: block.text,
+          };
+        }
+
+        if (block.type === "key_points") {
+          return {
+            title: "🔑 Key Points",
+            content: "• " + block.points.join("\n• "),
+          };
+        }
+
+        if (block.type === "conclusion") {
+          return {
+            title: "✅ Conclusion",
+            content: block.text,
+          };
+        }
+
+        return {
+          title: `Section ${index + 1}`,
+          content: JSON.stringify(block),
+        };
+      });
+
+      setResults(formattedResults);
+    } catch (err) {
+      console.log("ERROR:", err);
+
       setResults([
         {
-          title: "Summary",
-          content: `AI-generated summary for "${query}"...`,
-        },
-        {
-          title: "Key Points",
-          content: "• Point 1\n• Point 2\n• Point 3",
-        },
-        {
-          title: "Conclusion",
-          content: "This is the final insight based on research.",
+          title: "Error",
+          content: "Failed to fetch research data.",
         },
       ]);
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -48,7 +91,11 @@ export default function Research() {
 
         {!loading &&
           results.map((item, index) => (
-            <ResultCard key={index} title={item.title} content={item.content} />
+            <ResultCard
+              key={index}
+              title={item.title}
+              content={item.content}
+            />
           ))}
       </ScrollView>
     </SafeAreaView>

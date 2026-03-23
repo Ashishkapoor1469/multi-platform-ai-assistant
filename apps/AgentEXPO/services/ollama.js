@@ -1,12 +1,25 @@
 import Ollama from "ollama";
 
+
 export async function chatWithOllama(messages) {
   return await Ollama.chat({
     model: "gpt-oss:120b-cloud",
     messages,
-    stream:false,
+    stream: false,
   });
 }
+
+export async function researchWithOllama(messages) {
+  return await Ollama.chat({
+    model: "gpt-oss:120b-cloud",
+    messages,
+   format:"json"
+  });
+}
+
+
+
+
 
 export async function visionWithOllama(prompt, imagePath) {
   const res = await Ollama.chat({
@@ -22,3 +35,4 @@ export async function visionWithOllama(prompt, imagePath) {
 
   return res.message.content;
 }
+
