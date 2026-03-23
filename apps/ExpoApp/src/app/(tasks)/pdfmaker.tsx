@@ -24,7 +24,7 @@ export default function PDFMaker() {
   setBlocks([]);
 
   try {
-    const res = await fetch("http://192.168.31.45:8080/api/chat", {
+    const res = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -113,7 +113,7 @@ export default function PDFMaker() {
         onChangeText={setQuery}
         style={styles.input}
       />
-
+        
       <TouchableOpacity style={styles.btn} onPress={handleGenerate}>
         <Text style={styles.btnText}>Generate</Text>
       </TouchableOpacity>
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   title: { fontSize: 22, fontWeight: "bold" },
   input: { backgroundColor: "#eee", padding: 10, marginTop: 10 },
   btn: {
-    backgroundColor: "blue",
+    backgroundColor: "#000",
     padding: 12,
     marginTop: 10,
     alignItems: "center",

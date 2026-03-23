@@ -3,7 +3,7 @@ import PrimaryButton from "../login/primarybutton";
 import { router } from "expo-router";
 import TypingLoader from "./loader";
 import Markdown from "react-native-markdown-display";
-import Clipboard from "@react-native-clipboard/clipboard";
+
 
 interface ChatBubbleProps {
   message: string;
@@ -14,10 +14,6 @@ interface ChatBubbleProps {
 
 export default function ChatBubble({ message, isUser, tasks, loading }: ChatBubbleProps) {
 
-  const copyToClipboard = () => {
-    Clipboard.setString(message);
-    Alert.alert("Copied!", "Message copied to clipboard.");
-  };
 
   return (
     <View style={[styles.bubble, isUser ? styles.userBubble : styles.aiBubble]}>
@@ -25,11 +21,7 @@ export default function ChatBubble({ message, isUser, tasks, loading }: ChatBubb
         <TypingLoader /> 
       ) : (
         <View>
-            {!isUser && (
-            <TouchableOpacity onPress={copyToClipboard} style={styles.copyBtn}>
-              <Text style={styles.copyText}>Copy</Text>
-            </TouchableOpacity>
-          )}
+           
           <Markdown
             style={{
               body: isUser ? styles.userText : styles.aiText,

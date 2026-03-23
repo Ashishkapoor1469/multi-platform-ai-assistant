@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useState } from "react";
-import BackButton from "@/components/tasks/backbutton";
+
 
 export default function Schedule() {
   const [email, setEmail] = useState("");
@@ -65,7 +65,7 @@ export default function Schedule() {
   if (!aiEmail) return;
 
   try {
-    const res = await fetch("http://192.168.31.45:8080/api/send-email", {
+    const res = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/send-email`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -92,7 +92,6 @@ export default function Schedule() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <BackButton />
 
       <Text style={styles.title}>Schedule Meeting</Text>
 
@@ -189,7 +188,7 @@ const styles = StyleSheet.create({
 
   btn: {
     marginTop: 15,
-    backgroundColor: "#4a6cf7",
+    backgroundColor: "#3B4A5A",
     padding: 14,
     borderRadius: 12,
     alignItems: "center",

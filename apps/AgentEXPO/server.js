@@ -1,10 +1,12 @@
 import express from "express";
 import cors from "cors";
 import multer from "multer";
-
+import dotenv from "dotenv";
+dotenv.config();
 import { runAgent } from "./agent/agent.js";
 import { visionWithOllama } from "./services/ollama.js";
 import { sendMail } from "./services/nodemailer.js";
+import { runResearchAgent } from "./services/reserachagent.js";
 
 const app = express();
 app.use(cors());
@@ -129,6 +131,42 @@ app.post("/api/send-email", async (req, res) => {
 });
 
 //////////////////////////////////////////////////////
+
+
+app.post("/api/research", async (req, res) => {
+  const { message } = req.body;
+
+  console.log("🔍 Research Query:", message);
+
+  try {
+    const data = await runResearchAgent(message);
+ console.log( "📊 Research Data:", data);
+ 
+    res.json({
+      success: true,
+      data,
+    });
+  } catch (err) {
+    console.log("❌ ERROR:", err.message);
+
+    res.status(500).json({
+      success: false,
+      data: {
+        type: "research",
+        blocks: [
+          {
+            type: "summary",
+            text: "Failed to fetch research data",
+          },
+        ],
+      },
+    });
+  }
+});
+
+
+
+
 
 app.listen(8080, "0.0.0.0", () => {
   console.log("🚀 Backend running on http://localhost:8080");
