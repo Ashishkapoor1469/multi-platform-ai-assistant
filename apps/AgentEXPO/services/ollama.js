@@ -18,9 +18,6 @@ export async function researchWithOllama(messages) {
 }
 
 
-
-
-
 export async function visionWithOllama(prompt, imagePath) {
   const res = await Ollama.chat({
     model: "qwen3.5:397b-cloud",

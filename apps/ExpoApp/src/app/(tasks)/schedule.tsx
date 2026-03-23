@@ -29,7 +29,7 @@ export default function Schedule() {
   setAiEmail("");
 
   try {
-    const res = await fetch("http://192.168.31.45:8080/api/email-template", {
+    const res = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/email-template`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
